@@ -13,8 +13,9 @@ import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { Type } from "class-transformer";
-import { IsOptional } from "class-validator";
+import { IsOptional, ValidateNested } from "class-validator";
 import { StringFilter } from "../../util/StringFilter";
+import { ReportWhereUniqueInput } from "../../report/base/ReportWhereUniqueInput";
 
 @InputType()
 class UserWhereInput {
@@ -61,6 +62,18 @@ class UserWhereInput {
     nullable: true,
   })
   lastName?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => ReportWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => ReportWhereUniqueInput)
+  @IsOptional()
+  @Field(() => ReportWhereUniqueInput, {
+    nullable: true,
+  })
+  reports?: ReportWhereUniqueInput;
 
   @ApiProperty({
     required: false,
