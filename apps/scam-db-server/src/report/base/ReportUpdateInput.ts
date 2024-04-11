@@ -13,6 +13,7 @@ import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsOptional, IsDate, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
+import { ScamNumberWhereUniqueInput } from "../../scamNumber/base/ScamNumberWhereUniqueInput";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 
 @InputType()
@@ -49,6 +50,18 @@ class ReportUpdateInput {
     nullable: true,
   })
   reportDate?: Date | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => ScamNumberWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => ScamNumberWhereUniqueInput)
+  @IsOptional()
+  @Field(() => ScamNumberWhereUniqueInput, {
+    nullable: true,
+  })
+  scamNumber?: ScamNumberWhereUniqueInput | null;
 
   @ApiProperty({
     required: false,

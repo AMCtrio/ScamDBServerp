@@ -50,6 +50,12 @@ export class ReportControllerBase {
       data: {
         ...data,
 
+        scamNumber: data.scamNumber
+          ? {
+              connect: data.scamNumber,
+            }
+          : undefined,
+
         userId: data.userId
           ? {
               connect: data.userId,
@@ -61,6 +67,12 @@ export class ReportControllerBase {
         id: true,
         phoneNumber: true,
         reportDate: true,
+
+        scamNumber: {
+          select: {
+            id: true,
+          },
+        },
 
         userId: {
           select: {
@@ -93,6 +105,12 @@ export class ReportControllerBase {
         phoneNumber: true,
         reportDate: true,
 
+        scamNumber: {
+          select: {
+            id: true,
+          },
+        },
+
         userId: {
           select: {
             id: true,
@@ -124,6 +142,12 @@ export class ReportControllerBase {
         id: true,
         phoneNumber: true,
         reportDate: true,
+
+        scamNumber: {
+          select: {
+            id: true,
+          },
+        },
 
         userId: {
           select: {
@@ -162,6 +186,12 @@ export class ReportControllerBase {
         data: {
           ...data,
 
+          scamNumber: data.scamNumber
+            ? {
+                connect: data.scamNumber,
+              }
+            : undefined,
+
           userId: data.userId
             ? {
                 connect: data.userId,
@@ -173,6 +203,12 @@ export class ReportControllerBase {
           id: true,
           phoneNumber: true,
           reportDate: true,
+
+          scamNumber: {
+            select: {
+              id: true,
+            },
+          },
 
           userId: {
             select: {
@@ -213,6 +249,12 @@ export class ReportControllerBase {
           id: true,
           phoneNumber: true,
           reportDate: true,
+
+          scamNumber: {
+            select: {
+              id: true,
+            },
+          },
 
           userId: {
             select: {

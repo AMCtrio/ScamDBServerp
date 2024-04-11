@@ -10,9 +10,11 @@ https://docs.amplication.com/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { PrismaService } from "../../prisma/prisma.service";
+
 import {
   Prisma,
   Report as PrismaReport,
+  ScamNumber as PrismaScamNumber,
   User as PrismaUser,
 } from "@prisma/client";
 
@@ -47,6 +49,14 @@ export class ReportServiceBase {
     args: Prisma.SelectSubset<T, Prisma.ReportDeleteArgs>
   ): Promise<PrismaReport> {
     return this.prisma.report.delete(args);
+  }
+
+  async getScamNumber(parentId: string): Promise<PrismaScamNumber | null> {
+    return this.prisma.report
+      .findUnique({
+        where: { id: parentId },
+      })
+      .scamNumber();
   }
 
   async getUserId(parentId: string): Promise<PrismaUser | null> {

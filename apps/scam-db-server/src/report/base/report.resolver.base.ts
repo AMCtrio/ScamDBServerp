@@ -26,6 +26,7 @@ import { ReportFindUniqueArgs } from "./ReportFindUniqueArgs";
 import { CreateReportArgs } from "./CreateReportArgs";
 import { UpdateReportArgs } from "./UpdateReportArgs";
 import { DeleteReportArgs } from "./DeleteReportArgs";
+import { ScamNumber } from "../../scamNumber/base/ScamNumber";
 import { User } from "../../user/base/User";
 import { ReportService } from "../report.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
@@ -92,6 +93,12 @@ export class ReportResolverBase {
       data: {
         ...args.data,
 
+        scamNumber: args.data.scamNumber
+          ? {
+              connect: args.data.scamNumber,
+            }
+          : undefined,
+
         userId: args.data.userId
           ? {
               connect: args.data.userId,
@@ -116,6 +123,12 @@ export class ReportResolverBase {
         ...args,
         data: {
           ...args.data,
+
+          scamNumber: args.data.scamNumber
+            ? {
+                connect: args.data.scamNumber,
+              }
+            : undefined,
 
           userId: args.data.userId
             ? {
@@ -153,6 +166,27 @@ export class ReportResolverBase {
       }
       throw error;
     }
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => ScamNumber, {
+    nullable: true,
+    name: "scamNumber",
+  })
+  @nestAccessControl.UseRoles({
+    resource: "ScamNumber",
+    action: "read",
+    possession: "any",
+  })
+  async getScamNumber(
+    @graphql.Parent() parent: Report
+  ): Promise<ScamNumber | null> {
+    const result = await this.service.getScamNumber(parent.id);
+
+    if (!result) {
+      return null;
+    }
+    return result;
   }
 
   @common.UseInterceptors(AclFilterResponseInterceptor)
