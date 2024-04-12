@@ -13,6 +13,7 @@ import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsOptional, IsDate, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
+import { ScamNumber } from "../../scamNumber/base/ScamNumber";
 import { User } from "../../user/base/User";
 
 @ObjectType()
@@ -54,6 +55,15 @@ class Report {
     nullable: true,
   })
   reportDate!: Date | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => ScamNumber,
+  })
+  @ValidateNested()
+  @Type(() => ScamNumber)
+  @IsOptional()
+  scamNumber?: ScamNumber | null;
 
   @ApiProperty({
     required: false,

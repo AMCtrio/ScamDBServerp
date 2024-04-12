@@ -16,6 +16,7 @@ import { Type } from "class-transformer";
 import { IsOptional, ValidateNested } from "class-validator";
 import { StringFilter } from "../../util/StringFilter";
 import { DateTimeNullableFilter } from "../../util/DateTimeNullableFilter";
+import { ScamNumberWhereUniqueInput } from "../../scamNumber/base/ScamNumberWhereUniqueInput";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 
 @InputType()
@@ -52,6 +53,18 @@ class ReportWhereInput {
     nullable: true,
   })
   reportDate?: DateTimeNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => ScamNumberWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => ScamNumberWhereUniqueInput)
+  @IsOptional()
+  @Field(() => ScamNumberWhereUniqueInput, {
+    nullable: true,
+  })
+  scamNumber?: ScamNumberWhereUniqueInput;
 
   @ApiProperty({
     required: false,

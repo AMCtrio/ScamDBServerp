@@ -13,10 +13,10 @@ import { ReportList } from "./report/ReportList";
 import { ReportCreate } from "./report/ReportCreate";
 import { ReportEdit } from "./report/ReportEdit";
 import { ReportShow } from "./report/ReportShow";
-import { PhoneNumberList } from "./phoneNumber/PhoneNumberList";
-import { PhoneNumberCreate } from "./phoneNumber/PhoneNumberCreate";
-import { PhoneNumberEdit } from "./phoneNumber/PhoneNumberEdit";
-import { PhoneNumberShow } from "./phoneNumber/PhoneNumberShow";
+import { ScamNumberList } from "./scamNumber/ScamNumberList";
+import { ScamNumberCreate } from "./scamNumber/ScamNumberCreate";
+import { ScamNumberEdit } from "./scamNumber/ScamNumberEdit";
+import { ScamNumberShow } from "./scamNumber/ScamNumberShow";
 import { jwtAuthProvider } from "./auth-provider/ra-auth-jwt";
 
 const App = (): React.ReactElement => {
@@ -58,11 +58,11 @@ const App = (): React.ReactElement => {
           show={ReportShow}
         />
         <Resource
-          name="PhoneNumber"
-          list={PhoneNumberList}
-          edit={PhoneNumberEdit}
-          create={PhoneNumberCreate}
-          show={PhoneNumberShow}
+          name="ScamNumber"
+          list={ScamNumberList}
+          edit={ScamNumberEdit}
+          create={ScamNumberCreate}
+          show={ScamNumberShow}
         />
       </Admin>
     </div>

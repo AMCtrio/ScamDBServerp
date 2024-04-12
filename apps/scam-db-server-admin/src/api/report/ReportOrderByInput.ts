@@ -5,5 +5,6 @@ export type ReportOrderByInput = {
   id?: SortOrder;
   phoneNumber?: SortOrder;
   reportDate?: SortOrder;
+  scamNumberId?: SortOrder;
   userIdId?: SortOrder;
 };

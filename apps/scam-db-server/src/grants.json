@@ -61,31 +61,31 @@
   },
   {
     "role": "user",
-    "resource": "PhoneNumber",
+    "resource": "ScamNumber",
     "action": "read:own",
     "attributes": "*"
   },
   {
     "role": "user",
-    "resource": "PhoneNumber",
+    "resource": "ScamNumber",
     "action": "create:any",
     "attributes": "*"
   },
   {
     "role": "user",
-    "resource": "PhoneNumber",
+    "resource": "ScamNumber",
     "action": "update:any",
     "attributes": "*"
   },
   {
     "role": "user",
-    "resource": "PhoneNumber",
+    "resource": "ScamNumber",
     "action": "delete:any",
     "attributes": "*"
   },
   {
     "role": "user",
-    "resource": "PhoneNumber",
+    "resource": "ScamNumber",
     "action": "read:any",
     "attributes": "*"
   }

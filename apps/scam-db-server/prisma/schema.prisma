@@ -21,17 +21,20 @@ model User {
 }
 
 model Report {
-  description String?
-  id          String    @id @default(cuid())
-  phoneNumber String    @unique
-  reportDate  DateTime?
-  userId      User?     @relation(fields: [userIdId], references: [id])
-  userIdId    String?   @unique
+  description  String?
+  id           String      @id @default(cuid())
+  phoneNumber  String      @unique
+  reportDate   DateTime?
+  scamNumber   ScamNumber? @relation(fields: [scamNumberId], references: [id])
+  scamNumberId String?
+  userId       User?       @relation(fields: [userIdId], references: [id])
+  userIdId     String?     @unique
 }
 
-model PhoneNumber {
+model ScamNumber {
   id              String    @id @default(cuid())
   isScam          Boolean?
   lastCheckedDate DateTime?
   phone           String?
+  reports         Report[]
 }
