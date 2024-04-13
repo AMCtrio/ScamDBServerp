@@ -6,44 +6,44 @@ services:
       args:
         NPM_LOG_LEVEL: notice
     ports:
-      - ${PORT}:3000  # 将容器的 3000 端口映射到主机的环境变量 PORT 指定的端口
+      - ${PORT}:3000  # Map the application's port to the one specified by the PORT environment variable
     environment:
-      BCRYPT_SALT: ${BCRYPT_SALT}
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
-      JWT_EXPIRATION: ${JWT_EXPIRATION}
-      DB_URL: mysql://${DB_USER}:${DB_PASSWORD}@db:3306/${DB_NAME}  # 数据库连接字符串
+      BCRYPT_SALT: ${BCRYPT_SALT}  # Environment variable for bcrypt salt
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}  # Secret key for JWT
+      JWT_EXPIRATION: ${JWT_EXPIRATION}  # Expiration time for JWT
+      DB_URL: mysql://${DB_USER}:${DB_PASSWORD}@db:3306/${DB_NAME}  # Database connection URL
     depends_on:
       - migrate
-    restart: on-failure  # 失败时重启服务
+    restart: on-failure  # Restart policy in case of failure
 
   migrate:
     build:
       context: .
       args:
         NPM_LOG_LEVEL: notice
-    command: npm run db:init
+    command: npm run db:init  # Command to initialize the database
     working_dir: /app/server
     environment:
       BCRYPT_SALT: ${BCRYPT_SALT}
       DB_URL: mysql://${DB_USER}:${DB_PASSWORD}@db:3306/${DB_NAME}
     depends_on:
       db:
-        condition: service_healthy  # 依赖数据库服务健康运行
+        condition: service_healthy  # Wait for the database service to be healthy
 
   adminer:
     image: adminer
     restart: always
     ports:
-      - 1234:8080  # 将 Adminer 服务的 8080 端口映射到主机的 1234 端口
+      - 1234:8080  # Adminer UI accessible on localhost port 1234
 
   db:
     image: mysql
-    command: --default-authentication-plugin=caching_sha2_password  # 使用 caching_sha2_password 插件
+    command: --default-authentication-plugin=mysql_native_password  # Use mysql_native_password for compatibility
     restart: always
     ports:
-      - ${DB_PORT}:3306  # 将 MySQL 数据库的 3306 端口映射到环境变量 DB_PORT 指定的端口
+      - ${DB_PORT}:3306  # Map MySQL's port to the one specified by the DB_PORT environment variable
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}  # 设置 MySQL root 用户的密码
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}  # Root password for MySQL
     healthcheck:
       test:
         - CMD
@@ -58,4 +58,4 @@ services:
       retries: 10
 
 volumes:
-  mysql: ~  # 定义一个名为 mysql 的卷，用于持久化数据库数据
+  mysql: ~  # Define a volume for MySQL to ensure data persistence
