@@ -6,15 +6,16 @@ services:
       args:
         NPM_LOG_LEVEL: notice
     ports:
-      - ${PORT}:3000
+      - ${PORT}:3000  # 将容器的 3000 端口映射到主机的环境变量 PORT 指定的端口
     environment:
       BCRYPT_SALT: ${BCRYPT_SALT}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
       JWT_EXPIRATION: ${JWT_EXPIRATION}
-      DB_URL: mysql://${DB_USER}:${DB_PASSWORD}@db:3306/${DB_NAME}
+      DB_URL: mysql://${DB_USER}:${DB_PASSWORD}@db:3306/${DB_NAME}  # 数据库连接字符串
     depends_on:
       - migrate
-    restart: on-failure
+    restart: on-failure  # 失败时重启服务
+
   migrate:
     build:
       context: .
@@ -27,20 +28,22 @@ services:
       DB_URL: mysql://${DB_USER}:${DB_PASSWORD}@db:3306/${DB_NAME}
     depends_on:
       db:
-        condition: service_healthy
+        condition: service_healthy  # 依赖数据库服务健康运行
+
   adminer:
     image: adminer
     restart: always
     ports:
-      - 1234:8080
+      - 1234:8080  # 将 Adminer 服务的 8080 端口映射到主机的 1234 端口
+
   db:
     image: mysql
-    command: --default-authentication-plugin=mysql_native_password
+    command: --default-authentication-plugin=caching_sha2_password  # 使用 caching_sha2_password 插件
     restart: always
     ports:
-      - ${DB_PORT}:3306
+      - ${DB_PORT}:3306  # 将 MySQL 数据库的 3306 端口映射到环境变量 DB_PORT 指定的端口
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}  # 设置 MySQL root 用户的密码
     healthcheck:
       test:
         - CMD
@@ -53,5 +56,6 @@ services:
       timeout: 45s
       interval: 10s
       retries: 10
+
 volumes:
-  mysql: ~
+  mysql: ~  # 定义一个名为 mysql 的卷，用于持久化数据库数据
