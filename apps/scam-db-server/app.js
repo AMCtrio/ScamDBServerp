@@ -2,16 +2,18 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
-// 马来西亚电话号码验证的正则表达式
-const phoneRegex = /^\+60\d{1,2}\d{6,8}$/;
+// 马来西亚电话号码的正则表达式，包括移动电话和固定电话
+const phoneRegex = /^\+60(1\d{8,9}|[2-9]\d{7,8})$/;
 
-// 假设的数据库查询函数，返回一个布尔值表示是否为诈骗号码
+// 临时数据库存储
+let scamNumbersList = ['+60111222333', '+60149876543']; // 示例号码列表
+
+// 用于检查电话号码的函数
 function checkPhoneNumberInDatabase(phoneNumber) {
-    const knownScamNumbers = ['+60123456789', '+60129876543']; // 示例号码
-    return knownScamNumbers.includes(phoneNumber);
+    return scamNumbersList.includes(phoneNumber);
 }
 
-// GET API端点：检查电话号码是否为诈骗号码
+// API路由：检查电话号码
 app.get('/api/check-number', (req, res) => {
     const phoneNumber = req.query.phoneNumber;
 
@@ -27,19 +29,23 @@ app.get('/api/check-number', (req, res) => {
     }
 });
 
-// POST API端点：报告新的诈骗电话号码
+// API路由：报告诈骗电话号码
 app.post('/api/report-scam', (req, res) => {
     const { scamNumber, description } = req.body;
 
-    // 在这里添加实际的数据库添加逻辑
-    console.log(`Received scam report: Number - ${scamNumber}, Description - ${description}`);
-    
-    // 假设添加成功，返回确认消息
+    if (!scamNumber || !phoneRegex.test(scamNumber)) {
+        return res.status(400).json({ message: 'Invalid phone number format for Malaysia.' });
+    }
+
+    // 将新的诈骗号码添加到列表中
+    scamNumbersList.push(scamNumber);
+
+    console.log(`Scam number reported: ${scamNumber}, Description: ${description}`);
     res.status(201).json({ message: 'Scam number reported successfully.' });
 });
 
-// 设置服务器监听的端口
+// 设置服务器端口
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
