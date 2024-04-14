@@ -1,61 +1,33 @@
-version: "3"
+version: "3.8"
+
 services:
-  server:
-    build:
-      context: .
-      args:
-        NPM_LOG_LEVEL: notice
+  app:
+    build: .
     ports:
-      - ${PORT}:3000  # Map the application's port to the one specified by the PORT environment variable
+      - "${PORT}:3000"
     environment:
-      BCRYPT_SALT: ${BCRYPT_SALT}  # Environment variable for bcrypt salt
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY}  # Secret key for JWT
-      JWT_EXPIRATION: ${JWT_EXPIRATION}  # Expiration time for JWT
-      DB_URL: mysql://${DB_USER}:${DB_PASSWORD}@db:3306/${DB_NAME}  # Database connection URL
+      NODE_ENV: production
+      DB_URL: mysql://${DB_USER}:${DB_PASSWORD}@db/${DB_NAME}
     depends_on:
-      - migrate
-    restart: on-failure  # Restart policy in case of failure
-
-  migrate:
-    build:
-      context: .
-      args:
-        NPM_LOG_LEVEL: notice
-    command: npm run db:init  # Command to initialize the database
-    working_dir: /app/server
-    environment:
-      BCRYPT_SALT: ${BCRYPT_SALT}
-      DB_URL: mysql://${DB_USER}:${DB_PASSWORD}@db:3306/${DB_NAME}
-    depends_on:
-      db:
-        condition: service_healthy  # Wait for the database service to be healthy
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 1234:8080  # Adminer UI accessible on localhost port 1234
+      - db
 
   db:
-    image: mysql
-    command: --default-authentication-plugin=mysql_native_password  # Use mysql_native_password for compatibility
-    restart: always
-    ports:
-      - ${DB_PORT}:3306  # Map MySQL's port to the one specified by the DB_PORT environment variable
+    image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}  # Root password for MySQL
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
     healthcheck:
-      test:
-        - CMD
-        - mysqladmin
-        - ping
-        - -h
-        - localhost
-        - -u
-        - ${DB_USER}
-      timeout: 45s
-      interval: 10s
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
       retries: 10
 
 volumes:
-  mysql: ~  # Define a volume for MySQL to ensure data persistence
+  db-data:
+
